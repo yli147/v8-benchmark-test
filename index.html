@@ -94,38 +94,6 @@
                     { name: "String Operations", fn: stringOperations },
                     { name: "Array Operations", fn: arrayOperations }
                 ]
-            },
-            {
-                name: "Performance Tests",
-                tests: [
-                    { name: "Loop Performance", fn: performanceTest },
-                    { name: "Recursion Performance", fn: recursionTest },
-                    { name: "Memory Usage", fn: memoryTest }
-                ]
-            },
-            {
-                name: "Asynchronous Operations",
-                tests: [
-                    { name: "Promise Test", fn: promiseTest },
-                    { name: "Async/Await Test", fn: asyncAwaitTest },
-                    { name: "Timer Test", fn: timerTest }
-                ]
-            },
-            {
-                name: "Error Handling",
-                tests: [
-                    { name: "Throw Error", fn: errorTest },
-                    { name: "Type Error", fn: typeErrorTest },
-                    { name: "Catch Errors", fn: catchErrorTest }
-                ]
-            },
-            {
-                name: "V8 Features",
-                tests: [
-                    { name: "ES6+ Features", fn: es6Features },
-                    { name: "JIT Optimization", fn: optimizationTest },
-                    { name: "Garbage Collection", fn: gcTest }
-                ]
             }
         ];
 
@@ -174,135 +142,6 @@
             const doubled = arr.map(x => x * 2);
             const sum = arr.reduce((a, b) => a + b, 0);
             return `Array: [${arr}], Doubled: [${doubled}], Sum: ${sum}`;
-        }
-
-        function performanceTest() {
-            const start = performance.now();
-            let sum = 0;
-            for (let i = 0; i < 1000000; i++) {
-                sum += i;
-            }
-            const end = performance.now();
-            return `Loop 1M times: ${(end - start).toFixed(3)}ms, Sum: ${sum}`;
-        }
-
-        function recursionTest() {
-            function fibonacci(n) {
-                if (n <= 1) return n;
-                return fibonacci(n - 1) + fibonacci(n - 2);
-            }
-            const start = performance.now();
-            const result = fibonacci(30);
-            const end = performance.now();
-            return `Fibonacci(30): ${result}, Time: ${(end - start).toFixed(3)}ms`;
-        }
-
-        function memoryTest() {
-            const start = performance.now();
-            const arr = new Array(100000).fill(0).map((_, i) => ({ id: i, data: Math.random() }));
-            const memUsed = JSON.stringify(arr).length;
-            const end = performance.now();
-            return `Created 100k objects in ${(end - start).toFixed(3)}ms, Memory: ${(memUsed / 1024 / 1024).toFixed(2)}MB`;
-        }
-
-        async function promiseTest() {
-            const start = performance.now();
-            const promise = new Promise(resolve => setTimeout(() => resolve("Promise resolved!"), 100));
-            const result = await promise;
-            const end = performance.now();
-            return `Promise result: ${result}, Time: ${(end - start).toFixed(3)}ms`;
-        }
-
-        async function asyncAwaitTest() {
-            const start = performance.now();
-            const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-            await delay(50);
-            const end = performance.now();
-            return `Async/await completed in ${(end - start).toFixed(3)}ms`;
-        }
-
-        async function timerTest() {
-            return new Promise(resolve => {
-                const start = performance.now();
-                setTimeout(() => {
-                    const elapsed = performance.now() - start;
-                    resolve(`Timer test: ${elapsed.toFixed(3)}ms elapsed`);
-                }, 100);
-            });
-        }
-
-        function errorTest() {
-            const start = performance.now();
-            try {
-                throw new Error("Test error");
-            } catch (e) {
-                const end = performance.now();
-                return `Caught error in ${(end - start).toFixed(3)}ms: ${e.message}`;
-            }
-        }
-
-        function typeErrorTest() {
-            const start = performance.now();
-            try {
-                null.someMethod();
-            } catch (e) {
-                const end = performance.now();
-                return `Type error caught in ${(end - start).toFixed(3)}ms: ${e.name}`;
-            }
-        }
-
-        function catchErrorTest() {
-            const start = performance.now();
-            try {
-                JSON.parse("invalid json");
-            } catch (e) {
-                const end = performance.now();
-                return `JSON parse error in ${(end - start).toFixed(3)}ms: ${e.name}`;
-            }
-        }
-
-        function eventTest() {
-            const start = performance.now();
-            const button = document.createElement('button');
-            button.textContent = 'Test Button';
-            button.onclick = () => alert('Event fired!');
-            document.getElementById('dynamic-content').appendChild(button);
-            const end = performance.now();
-            return `Event handler attached in ${(end - start).toFixed(3)}ms`;
-        }
-
-        function es6Features() {
-            const start = performance.now();
-            const arr = [1, 2, 3];
-            const [first, ...rest] = arr;
-            const obj = { a: 1, b: 2 };
-            const { a, b } = obj;
-            const template = `First: ${first}, Rest: [${rest}], a: ${a}, b: ${b}`;
-            const end = performance.now();
-            return `ES6 features executed in ${(end - start).toFixed(3)}ms: ${template}`;
-        }
-
-        function optimizationTest() {
-            function hotFunction(x) {
-                return x * x + x;
-            }
-            const start = performance.now();
-            for (let i = 0; i < 1000000; i++) {
-                hotFunction(i);
-            }
-            const end = performance.now();
-            return `Hot function called 1M times in ${(end - start).toFixed(3)}ms`;
-        }
-
-        function gcTest() {
-            const before = performance.now();
-            const arrays = [];
-            for (let i = 0; i < 1000; i++) {
-                arrays.push(new Array(1000).fill(Math.random()));
-            }
-            arrays.length = 0; // Clear references
-            const after = performance.now();
-            return `GC test: Created and cleared 1M elements in ${(after - before).toFixed(3)}ms`;
         }
 
         // 自动运行所有测试
@@ -369,7 +208,6 @@
             document.getElementById('estimated-time').textContent = `Completed!`;
             document.getElementById('test-speed').textContent = `Avg: ${(totalTests / totalTimeSec).toFixed(1)} tests/sec`;
             document.getElementById('ms-time').textContent = `${totalTimeMs}ms total`;
-
         }
 
         // 页面加载完成后自动开始测试

@@ -66,10 +66,62 @@
             font-size: 11px;
             color: #dc3545;
         }
+        
+        /* 新增时间戳样式 */
+        .timestamp-container {
+            background: white;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-family: monospace;
+        }
+        .timestamp-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 8px 0;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        .timestamp-label {
+            font-weight: bold;
+            color: #495057;
+        }
+        .timestamp-value {
+            color: #007bff;
+            font-size: 14px;
+        }
+        .start-timestamp {
+            background: #e7f3ff;
+            border-left: 4px solid #007bff;
+        }
+        .end-timestamp {
+            background: #e8f5e8;
+            border-left: 4px solid #28a745;
+        }
     </style>
 </head>
 <body>
     <h1>🚀 V8 JavaScript Engine Auto Test</h1>
+    
+    <!-- 时间戳显示区域 -->
+    <div id="timestamp-container" class="timestamp-container">
+        <h3>⏰ Execution Timestamps</h3>
+        <div id="start-timestamp" class="timestamp-row start-timestamp">
+            <span class="timestamp-label">Start Time:</span>
+            <span id="start-time-value" class="timestamp-value">--</span>
+        </div>
+        <div id="end-timestamp" class="timestamp-row end-timestamp" style="display: none;">
+            <span class="timestamp-label">End Time:</span>
+            <span id="end-time-value" class="timestamp-value">--</span>
+        </div>
+        <div id="duration-info" class="timestamp-row" style="display: none;">
+            <span class="timestamp-label">Total Duration:</span>
+            <span id="duration-value" class="timestamp-value">--</span>
+        </div>
+    </div>
     
     <div class="progress-container">
         <div class="progress">
@@ -96,6 +148,20 @@
                 ]
             }
         ];
+
+        // 格式化时间戳为可读格式
+        function formatTimestamp(timestamp) {
+            const date = new Date(timestamp);
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            const seconds = date.getSeconds().toString().padStart(2, '0');
+            const milliseconds = date.getMilliseconds().toString().padStart(3, '0');
+            
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
+        }
 
         // 毫秒级时间格式化函数
         function formatTimeWithMs(milliseconds) {
@@ -148,7 +214,11 @@
         async function runAllTests() {
             const container = document.getElementById('test-container');
             const progressBar = document.getElementById('progress-bar');
+            
+            // 记录开始时间戳
             const startTime = Date.now();
+            document.getElementById('start-time-value').textContent = formatTimestamp(startTime);
+            
             let totalTests = 0;
             let completedTests = 0;
 
@@ -199,10 +269,20 @@
                 }
             }
 
+            // 记录结束时间戳
+            const endTime = Date.now();
+            const totalTimeMs = endTime - startTime;
+            const totalTimeSec = totalTimeMs / 1000;
+            
+            // 显示结束时间戳和持续时间
+            document.getElementById('end-time-value').textContent = formatTimestamp(endTime);
+            document.getElementById('end-timestamp').style.display = 'flex';
+            
+            document.getElementById('duration-value').textContent = `${formatTimeWithMs(totalTimeMs)} (${totalTimeMs}ms)`;
+            document.getElementById('duration-info').style.display = 'flex';
+
             // 测试完成后清除定时器并显示最终统计
             clearInterval(timeUpdateInterval);
-            const totalTimeMs = Date.now() - startTime;
-            const totalTimeSec = totalTimeMs / 1000;
             
             document.getElementById('elapsed-time').textContent = formatTimeWithMs(totalTimeMs);
             document.getElementById('estimated-time').textContent = `Completed!`;
